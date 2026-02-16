@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Beginner English Vocabulary Quiz (V1)</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #121a2c;
+      --text: #f3f6ff;
+      --muted: #c9d2ff;
+      --border: rgba(255, 255, 255, 0.14);
+
+      --good: #22c55e;
+      --bad: #ef4444;
+      --focus: #60a5fa;
+
+      --btn: #1f2a44;
+      --btnHover: #27365a;
+      --btnDisabled: rgba(31, 42, 68, 0.55);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .header { padding: 8px 4px 14px; }
+
+    .title {
+      margin: 0;
+      font-size: 1.5rem;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin: 6px 0 10px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 10px 0 10px;
+    }
+
+    .pill {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .pill-level { background: rgba(96,165,250,0.12); }
+
+    .progressBar {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .progressBarFill {
+      height: 100%;
+      width: 0%;
+      background: rgba(34,197,94,0.85);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+    }
+
+    .promptArea { padding: 8px 6px 12px; }
+
+    .promptLabel {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .promptText {
+      margin: 0;
+      font-size: 2rem;
+      letter-spacing: 0.3px;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      margin: 10px 0 8px;
+    }
+
+    .optionBtn {
+      width: 100%;
+      padding: 14px 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--btn);
+      color: var(--text);
+      font-size: 1.05rem;
+      font-weight: 650;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.02s ease, background 0.15s ease;
+    }
+
+    .optionBtn:hover { background: var(--btnHover); }
+    .optionBtn:active { transform: scale(0.99); }
+
+    .optionBtn:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .optionBtn[disabled] {
+      cursor: not-allowed;
+      opacity: 0.85;
+    }
+
+    .optionPrefix {
+      display: inline-block;
+      min-width: 2.1em;
+      opacity: 0.95;
+    }
+
+    .optionBtn.correct {
+      border-color: rgba(34,197,94,0.8);
+      background: rgba(34,197,94,0.14);
+    }
+
+    .optionBtn.wrong {
+      border-color: rgba(239,68,68,0.8);
+      background: rgba(239,68,68,0.14);
+    }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .feedbackTitle {
+      margin: 0 0 6px;
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+
+    .feedbackLine {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .helpBox {
+      border-top: 1px dashed rgba(255,255,255,0.18);
+      padding-top: 10px;
+    }
+
+    .helpTitle {
+      margin: 6px 0 4px;
+      font-weight: 750;
+    }
+
+    .helpText {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .nextBtn, .restartBtn {
+      width: 100%;
+      padding: 14px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(96,165,250,0.16);
+      color: var(--text);
+      font-weight: 800;
+      font-size: 1.05rem;
+      cursor: pointer;
+    }
+
+    .nextBtn:hover, .restartBtn:hover {
+      background: rgba(96,165,250,0.22);
+    }
+
+    .nextBtn[disabled] {
+      background: var(--btnDisabled);
+      cursor: not-allowed;
+    }
+
+    .resultsTitle {
+      margin: 0 0 6px;
+      font-size: 1.6rem;
+    }
+
+    .score {
+      margin: 6px 0 2px;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .encourage {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .resultsList {
+      display: grid;
+      gap: 10px;
+      margin: 10px 0 14px;
+    }
+
+    .resultItem {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .resultTop {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .resultWord {
+      font-weight: 900;
+      font-size: 1.05rem;
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      border: 1px solid var(--border);
+    }
+
+    .badge.good { background: rgba(34,197,94,0.14); border-color: rgba(34,197,94,0.5); }
+    .badge.bad { background: rgba(239,68,68,0.14); border-color: rgba(239,68,68,0.5); }
+
+    .resultLine {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .footer { padding: 12px 4px 6px; }
+
+    .footerText {
+      margin: 12px 0 0;
+      color: rgba(201,210,255,0.9);
+      font-size: 0.95rem;
+    }
+
+    @media (min-width: 640px) {
+      .app { padding: 22px; }
+      .card { padding: 18px; }
+      .promptText { font-size: 2.3rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app" aria-label="Beginner English vocabulary quiz">
+    <header class="header">
+      <h1 class="title">English Vocabulary Quiz</h1>
+      <p class="subtitle">Simple practice for new learners. Take your time.</p>
+
+      <div class="meta" role="status" aria-live="polite">
+        <div class="pill" id="progressPill">Question 1 of 10</div>
+        <div class="pill pill-level" id="levelPill">Level 1 (Easy)</div>
+      </div>
+
+      <div class="progressBar" aria-hidden="true">
+        <div class="progressBarFill" id="progressBarFill"></div>
+      </div>
+    </header>
+
+    <!-- QUIZ SCREEN -->
+    <section class="card" id="quizScreen" aria-label="Quiz screen">
+      <div class="promptArea">
+        <p class="promptLabel" id="typeLabel">Choose the correct meaning</p>
+        <h2 class="promptText" id="promptText">bus</h2>
+      </div>
+
+      <div class="options" role="group" aria-label="Answer options">
+        <button class="optionBtn" id="opt0" type="button" aria-label="Option A"></button>
+        <button class="optionBtn" id="opt1" type="button" aria-label="Option B"></button>
+        <button class="optionBtn" id="opt2" type="button" aria-label="Option C"></button>
+        <button class="optionBtn" id="opt3" type="button" aria-label="Option D"></button>
+      </div>
+
+      <div class="feedback" id="feedback" aria-live="polite" aria-atomic="true" hidden>
+        <p class="feedbackTitle" id="feedbackTitle">Correct ✅</p>
+        <p class="feedbackLine" id="correctAnswerLine">Correct answer: A) ...</p>
+
+        <div class="helpBox" id="helpBox">
+          <p class="helpTitle">Meaning:</p>
+          <p class="helpText" id="meaningText">...</p>
+
+          <p class="helpTitle">Example:</p>
+          <p class="helpText" id="exampleText">...</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="nextBtn" id="nextBtn" type="button" disabled aria-disabled="true">
+          Next
+        </button>
+      </div>
+    </section>
+
+    <!-- RESULTS SCREEN -->
+    <section class="card" id="resultsScreen" aria-label="Results screen" hidden>
+      <h2 class="resultsTitle">Results</h2>
+      <p class="score" id="scoreText">You scored 0/10</p>
+      <p class="encourage" id="encourageText">Good work. Keep going.</p>
+
+      <div class="resultsList" id="resultsList" aria-label="Review list"></div>
+
+      <div class="actions">
+        <button class="restartBtn" id="restartBtn" type="button">Restart Quiz</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p class="footerText">Tip: Read the meaning and example after each answer.</p>
+    </footer>
+  </main>
+
+  <script>
+    // Beginner English Vocabulary Quiz (V1)
+    // - Single page
+    // - Vanilla JS
+    // - Questions stored in a JSON-like array below
+
+    /* ---------------------------
+       1) QUESTION DATA (EDIT HERE)
+    ---------------------------- */
+
+    /**
+     * Each question has:
+     * - level (1/2/3)
+     * - type ("meaning" or "real_english")
+     * - prompt (string)
+     * - options (array of 4)
+     * - correctIndex (0..3)
+     * - explanationMeaning (simple)
+     * - exampleSentence (simple, optional)
+     */
+    const QUESTIONS = [
+      // Level 1 (Easy) — 4 questions
+      {
+        level: 1,
+        type: "meaning",
+        prompt: "bus",
+        options: ["A car", "A public transport vehicle", "A bicycle", "A train station"],
+        correctIndex: 1,
+        explanationMeaning: "A bus is a big vehicle. Many people ride it.",
+        exampleSentence: "I take the bus to town."
+      },
+      {
+        level: 1,
+        type: "meaning",
+        prompt: "address",
+        options: ["A phone", "Where you live", "A job", "A ticket"],
+        correctIndex: 1,
+        explanationMeaning: "An address tells where you live.",
+        exampleSentence: "My address is on this letter."
+      },
+      {
+        level: 1,
+        type: "real_english",
+        prompt: "Which one is real English?",
+        options: ["apointmant", "appointment", "apoyntment", "appoyntmant"],
+        correctIndex: 1,
+        explanationMeaning: "Appointment = a planned meeting (often with a doctor or office).",
+        exampleSentence: "I have a doctor appointment."
+      },
+      {
+        level: 1,
+        type: "meaning",
+        prompt: "job",
+        options: ["Work you do for money", "A holiday", "A bill", "A shop"],
+        correctIndex: 0,
+        explanationMeaning: "A job is work you do to earn money.",
+        exampleSentence: "My job starts at 9."
+      },
+
+      // Level 2 (Medium) — 3 questions
+      {
+        level: 2,
+        type: "meaning",
+        prompt: "rent",
+        options: ["Money you pay for a home", "Money you save", "Food you buy", "A free gift"],
+        correctIndex: 0,
+        explanationMeaning: "Rent is money you pay to live in a house or flat.",
+        exampleSentence: "I pay rent every month."
+      },
+      {
+        level: 2,
+        type: "real_english",
+        prompt: "Which one is real English?",
+        options: ["reciept", "receipt", "reseet", "receept"],
+        correctIndex: 1,
+        explanationMeaning: "Receipt = a paper that shows you paid.",
+        exampleSentence: "Keep the receipt."
+      },
+      {
+        level: 2,
+        type: "meaning",
+        prompt: "ID",
+        options: ["A type of food", "A document that shows who you are", "A train", "A map"],
+        correctIndex: 1,
+        explanationMeaning: "ID means identification. It shows who you are.",
+        exampleSentence: "Please show your ID."
+      },
+
+      // Level 3 (Hard) — 3 questions
+      {
+        level: 3,
+        type: "meaning",
+        prompt: "benefit",
+        options: ["A problem", "Help or money support", "A taxi", "A game"],
+        correctIndex: 1,
+        explanationMeaning: "A benefit is help (often money) from the government.",
+        exampleSentence: "She gets a benefit."
+      },
+      {
+        level: 3,
+        type: "real_english",
+        prompt: "Which one is real English?",
+        options: ["landloard", "landlord", "landlordd", "landlorde"],
+        correctIndex: 1,
+        explanationMeaning: "Landlord = the person who owns the house/flat you rent.",
+        exampleSentence: "My landlord fixed the door."
+      },
+      {
+        level: 3,
+        type: "meaning",
+        prompt: "sick",
+        options: ["Not well / ill", "Very happy", "Very fast", "Very noisy"],
+        correctIndex: 0,
+        explanationMeaning: "Sick means not well (ill).",
+        exampleSentence: "I feel sick today."
+      }
+    ];
+
+    if (QUESTIONS.length !== 10) {
+      console.warn("This V1 app expects exactly 10 questions. Current:", QUESTIONS.length);
+    }
+
+    /* ---------------------------
+       2) STATE
+    ---------------------------- */
+
+    let currentIndex = 0;
+    let score = 0;
+
+    // Store user answers for review:
+    // { chosenIndex: number|null, isCorrect: boolean, correctIndex: number }
+    let answers = [];
+
+    // UI references
+    const quizScreen = document.getElementById("quizScreen");
+    const resultsScreen = document.getElementById("resultsScreen");
+
+    const progressPill = document.getElementById("progressPill");
+    const levelPill = document.getElementById("levelPill");
+    const progressBarFill = document.getElementById("progressBarFill");
+
+    const typeLabel = document.getElementById("typeLabel");
+    const promptText = document.getElementById("promptText");
+
+    const optionButtons = [
+      document.getElementById("opt0"),
+      document.getElementById("opt1"),
+      document.getElementById("opt2"),
+      document.getElementById("opt3")
+    ];
+
+    const feedback = document.getElementById("feedback");
+    const feedbackTitle = document.getElementById("feedbackTitle");
+    const correctAnswerLine = document.getElementById("correctAnswerLine");
+    const meaningText = document.getElementById("meaningText");
+    const exampleText = document.getElementById("exampleText");
+
+    const nextBtn = document.getElementById("nextBtn");
+
+    const scoreText = document.getElementById("scoreText");
+    const encourageText = document.getElementById("encourageText");
+    const resultsList = document.getElementById("resultsList");
+    const restartBtn = document.getElementById("restartBtn");
+
+    /* ---------------------------
+       3) HELPERS
+    ---------------------------- */
+
+    function levelLabel(level) {
+      if (level === 1) return "Level 1 (Easy)";
+      if (level === 2) return "Level 2 (Medium)";
+      return "Level 3 (Hard)";
+    }
+
+    function typeLabelText(type) {
+      return type === "real_english"
+        ? "Which one is real English?"
+        : "Choose the correct meaning";
+    }
+
+    function letterForIndex(i) {
+      return ["A", "B", "C", "D"][i] || "?";
+    }
+
+    function setNextEnabled(enabled) {
+      nextBtn.disabled = !enabled;
+      nextBtn.setAttribute("aria-disabled", String(!enabled));
+    }
+
+    /* ---------------------------
+       4) RENDER QUESTION
+    ---------------------------- */
+
+    function renderQuestion() {
+      const q = QUESTIONS[currentIndex];
+
+      // Progress
+      const n = currentIndex + 1;
+      progressPill.textContent = `Question ${n} of ${QUESTIONS.length}`;
+      levelPill.textContent = levelLabel(q.level);
+
+      const pct = Math.round(((n - 1) / QUESTIONS.length) * 100);
+      progressBarFill.style.width = `${pct}%`;
+
+      // Prompt
+      typeLabel.textContent = typeLabelText(q.type);
+      promptText.textContent = q.prompt;
+
+      // Options
+      optionButtons.forEach((btn, i) => {
+        btn.disabled = false;
+        btn.classList.remove("correct", "wrong");
+        btn.innerHTML = `<span class="optionPrefix">${letterForIndex(i)})</span> ${q.options[i]}`;
+      });
+
+      // Feedback hidden
+      feedback.hidden = true;
+
+      // Next disabled until user picks
+      setNextEnabled(false);
+    }
+
+    /* ---------------------------
+       5) HANDLE ANSWER
+    ---------------------------- */
+
+    function lockOptions() {
+      optionButtons.forEach((btn) => (btn.disabled = true));
+    }
+
+    function showFeedback(chosenIndex) {
+      const q = QUESTIONS[currentIndex];
+      const isCorrect = chosenIndex === q.correctIndex;
+
+      // Score update
+      if (isCorrect) score += 1;
+
+      // Store answer
+      answers[currentIndex] = {
+        chosenIndex,
+        isCorrect,
+        correctIndex: q.correctIndex
+      };
+
+      // Button styles
+      optionButtons.forEach((btn, i) => {
+        if (i === q.correctIndex) btn.classList.add("correct");
+        if (i === chosenIndex && !isCorrect) btn.classList.add("wrong");
+      });
+
+      // Feedback
+      feedbackTitle.textContent = isCorrect ? "Correct ✅" : "Not correct ❌";
+
+      const correctLetter = letterForIndex(q.correctIndex);
+      correctAnswerLine.textContent = `Correct answer: ${correctLetter}) ${q.options[q.correctIndex]}`;
+
+      meaningText.textContent = q.explanationMeaning || "Meaning: (not provided)";
+      exampleText.textContent = q.exampleSentence ? q.exampleSentence : "Example: (no example)";
+
+      feedback.hidden = false;
+
+      // Enable next
+      setNextEnabled(true);
+    }
+
+    function onOptionClick(index) {
+      // Prevent double answering
+      if (!feedback.hidden) return;
+
+      lockOptions();
+      showFeedback(index);
+    }
+
+    /* ---------------------------
+       6) NEXT / RESULTS / RESTART
+    ---------------------------- */
+
+    function showResults() {
+      progressBarFill.style.width = "100%";
+
+      quizScreen.hidden = true;
+      resultsScreen.hidden = false;
+
+      scoreText.textContent = `You scored ${score}/${QUESTIONS.length}`;
+
+      if (score <= 3) encourageText.textContent = "Good start. Try again and learn one word at a time.";
+      else if (score <= 7) encourageText.textContent = "Nice work. You are improving.";
+      else encourageText.textContent = "Excellent. Keep practising every day.";
+
+      resultsList.innerHTML = "";
+
+      QUESTIONS.forEach((q, i) => {
+        const a = answers[i];
+        const ok = a?.isCorrect === true;
+
+        const wordTitle = q.type === "meaning" ? q.prompt : "Real English word";
+        const correctText = `${letterForIndex(q.correctIndex)}) ${q.options[q.correctIndex]}`;
+        const chosenText =
+          a && a.chosenIndex !== null
+            ? `${letterForIndex(a.chosenIndex)}) ${q.options[a.chosenIndex]}`
+            : "No answer";
+
+        const item = document.createElement("div");
+        item.className = "resultItem";
+        item.innerHTML = `
+          <div class="resultTop">
+            <div class="resultWord">${i + 1}. ${wordTitle}</div>
+            <div class="badge ${ok ? "good" : "bad"}">${ok ? "Correct ✅" : "Not correct ❌"}</div>
+          </div>
+          <p class="resultLine"><strong>Your answer:</strong> ${chosenText}</p>
+          <p class="resultLine"><strong>Correct answer:</strong> ${correctText}</p>
+          <p class="resultLine"><strong>Meaning:</strong> ${q.explanationMeaning}</p>
+          ${q.exampleSentence ? `<p class="resultLine"><strong>Example:</strong> ${q.exampleSentence}</p>` : ""}
+        `;
+        resultsList.appendChild(item);
+      });
+    }
+
+    function nextQuestion() {
+      currentIndex += 1;
+
+      if (currentIndex >= QUESTIONS.length) {
+        showResults();
+        return;
+      }
+      renderQuestion();
+    }
+
+    function restartQuiz() {
+      currentIndex = 0;
+      score = 0;
+      answers = new Array(QUESTIONS.length).fill(null);
+
+      resultsScreen.hidden = true;
+      quizScreen.hidden = false;
+
+      renderQuestion();
+    }
+
+    /* ---------------------------
+       7) INIT
+    ---------------------------- */
+
+    function attachEvents() {
+      optionButtons.forEach((btn, i) => {
+        btn.addEventListener("click", () => onOptionClick(i));
+      });
+
+      nextBtn.addEventListener("click", nextQuestion);
+      restartBtn.addEventListener("click", restartQuiz);
+    }
+
+    function init() {
+      answers = new Array(QUESTIONS.length).fill(null);
+      attachEvents();
+      renderQuestion();
+    }
+
+    init();
+  </script>
+</body>
+</html>
